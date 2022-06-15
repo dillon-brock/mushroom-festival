@@ -46,22 +46,28 @@ const Forest = createForest(document.querySelector('#forest'), {
 
 const Friends = createFriends(document.querySelector('#friends'), {
     handleFeedFriend: (friend) => {
-        // *** Three possible outcomes:
-        // 1. Set a message if no mushrooms exist telling user to go hunt some
-        // 2. Friend is already fully satisfied ( === 2), set a message
-        //    that this friend is full and they should pick another friend
-        // 3. run logic to feed the friend:
-        //    - set a variable to the first mushroom in the array at index 0
-        //    - use removeMushroom to remove this mushroom from state
-        //    - increment the friend.satisfied property
-        //    - use updateFriend to modify state
-        //    - clear the message (set it to '')
+        
+        if (state.mushrooms.length === 0) {
+            setMessage("You don't have any mushrooms. Better go hunting!");
+            display();
+            return;
+        }
+        
+        if (friend.satisfied === 2) {
+            setMessage(`${friend.name} is full! Pick another friend.`);
+            display();
+            return;
+        }
 
-        // be careful that you always call display after any of the three outcomes
+        const firstMushroom = state.mushrooms[0];
+        removeMushroom(firstMushroom);
+        friend.satisfied++;
+        updateFriend(friend);
+        setMessage('');
         display();
     },
     handleBye: (friend) => {
-        // *** use removeFriend to remove this friend from state;
+        removeFriend(friend);
         display();
     },
 });
